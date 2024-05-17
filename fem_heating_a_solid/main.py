@@ -1,3 +1,8 @@
+# https://stackoverflow.com/questions/52202014/how-can-i-plot-2d-fem-results-using-matplotlib
+# https://scicomp.stackexchange.com/questions/31463/efficiently-plot-a-finite-element-mesh-solution-with-matplotlib
+
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
