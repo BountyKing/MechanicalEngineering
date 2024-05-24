@@ -1,13 +1,10 @@
-# https://stackoverflow.com/questions/52202014/how-can-i-plot-2d-fem-results-using-matplotlib
-# https://scicomp.stackexchange.com/questions/31463/efficiently-plot-a-finite-element-mesh-solution-with-matplotlib
-# ctrl alt shift l to reformate the file
+# based on https://perso.univ-lyon1.fr/marc.buffat/COURS/BOOK_ELTFINIS_HTML/CoursEF/chap4.html#equation-eq4-21
 
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri
 from mesh import make_mesh, read_mesh, show_mesh
 import utilities as util
-import scipy.integrate as integrate
 
 
 class Study:
@@ -49,6 +46,7 @@ class Study:
         show_mesh(self.mesh)
 
     def do(self):
+        # Constructing matrix A and B of the equation A X = B
         A = np.zeros((self.nn, self.nn))
         B = np.zeros(self.nn)
 
@@ -58,36 +56,47 @@ class Study:
             x2, y2 = n2
             x3, y3 = n3
 
+            # Calculating elementary matrix Ke
             Area = 0.5 * ((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1))
             p = np.zeros(5, dtype=int)
             p[0:3] = elt[:]
             p[3:5] = elt[0:2]
-            dN = self.nodes[np.ix_(p[1:4], [0, 1])] - self.nodes[np.ix_(p[2:5], [0, 1])]
-            dN = np.array([dN[:, 1], -dN[:, 0]])
-            K22 = np.dot(dN[:, 1], dN[:, 1]) / Area
-            K23 = np.dot(dN[:, 1], dN[:, 2]) / Area
-            K33 = np.dot(dN[:, 2], dN[:, 2]) / Area
+            dX = self.nodes[np.ix_(p[1:4], [0, 1])] - self.nodes[np.ix_(p[2:5], [0, 1])]
+
+            dN = np.array([dX[:, 1], -dX[:, 0]]) / (dX[0, 0] * dX[1, 1] - dX[1, 0] * dX[0, 1])
+
+            K22 = np.dot(dN[:, 1], dN[:, 1]) * Area
+            K33 = np.dot(dN[:, 2], dN[:, 2]) * Area
+            K23 = np.dot(dN[:, 1], dN[:, 2]) * Area
+
             Ke = np.array([[K22 + K33 + 2 * K23, -K23 - K22, -K23 - K33],
                            [-K23 - K22, K22, K23],
                            [-K23 - K33, K23, K33]])
 
+            # Calculating elementary matrix Me
             Me = Area / 12.0 * np.array([[2, 1, 1],
                                          [1, 2, 1],
                                          [1, 1, 2]])
 
+            # Retrieve matrix Fe, matrix given by the f function
             Fe = util.get_Fe([n1, n2, n3], self.f)
 
+            # c.f. course cited
             Be = np.dot(Me, Fe)
-            A[np.ix_(elt, elt)] += self.k * Ke
+
+            # Adding the elementary matrixes to the matrices of the main equation
+            A[np.ix_(elt, elt)] += self.k * Ke + self.alpha * Me
             B[np.ix_(elt)] += Be
 
-        # Boundary conditions
+        # Get the edges affected by BC
         edges_bc = []
         for k in range(self.ne):
             edges = [*self.elements[k, :], self.elements[k, 0]]
             for j in range(3):
                 if not self.frontier[edges[j]] == 0 and not self.frontier[edges[j + 1]] == 0:
                     edges_bc.append([edges[j], edges[j + 1]])
+
+        # Remove the edges counted twice
         edges_bc_wo_double = []
         for ij in edges_bc:
             i, j = ij[0], ij[1]
@@ -96,6 +105,7 @@ class Study:
 
         edges_bc = edges_bc_wo_double
         for edge in edges_bc:
+            # Boundary driven by a Fourier type of condition
             if self.frontier[edge[0]] == 4 and self.frontier[edge[1]] == 4:
                 dl = np.linalg.norm(self.nodes[edge[0]] - self.nodes[edge[1]])
                 A[edge[0], edge[0]] += self.beta * dl / 3
@@ -104,57 +114,44 @@ class Study:
                 A[edge[1], edge[1]] += self.beta * dl / 6
                 B[edge[0]] -= self.phi0 * dl / 2
                 B[edge[1]] -= self.phi0 * dl / 2
+
         for i in range(self.nn):
+            # Homogeneous Dirichlet BC
             if self.frontier[i] == 1:
                 A[i, :] = 0
                 A[:, i] = 0
                 A[i, i] = 1.0
                 B[i] = 0
+            # Non-homogeneous Dirichlet BC
             elif self.frontier[i] == 2:
                 A[i, :] = 0
-                A[:, i] = 0
+                # A[:, i] = 0  # Error in the course cited previously
                 A[i, i] = 1.0
                 B[i] = self.ue
-        #   Dirichlet
-        # A[np.where(self.frontier == 1), :] = 0
-        # A[np.where(self.frontier == 1), np.where(self.frontier == 1)] = 1
-        # B[np.where(self.frontier == 1)] = 0
-        # A[np.where(self.frontier == 2), :] = 0
-        # A[np.where(self.frontier == 2), np.where(self.frontier == 1)] = 1
-        # B[np.where(self.frontier == 2)] = self.ue
-        np.savetxt("A.log.txt", A, delimiter=",")
+
+        # Solving the equation A X = B
         U = np.linalg.solve(A, B)
         self.results = U
 
     def show_results(self):
-        print(self.results)
+        [print(a, end=" ") for a in self.results]
         fig, ax = plt.subplots()
         triangles = matplotlib.tri.Triangulation(self.nodes[:, 0], self.nodes[:, 1], self.elements)
-        contour = ax.tricontourf(triangles, self.results)
-        ax.tricontour(triangles, self.results, colors='k')
+        contour = ax.tricontourf(triangles, self.results, linewidths=1)
+        ax.tricontour(triangles, self.results, colors='k', linewidths=1)
         fig.colorbar(contour)
         plt.show()
 
 
 if __name__ == "__main__":
-    # c = 5  # speed of the air surrounding the solid
-    # H = 10.45 - c + 10 * np.sqrt(c)
-    # EPSILON = 1
-    # SIGMA = 5.670374419e-8
-
-    # geometry = {
-    #     "length": 20,
-    #     "height": 10,
-    #     "thickness": 1
-    # }
-
+    
     constants = {
-        "ue": 2,
+        "ue": 2.0,
         "alpha": 0.0,
         "beta": 0.0,
         "phi0": 0.0,
         "k": 1.0,
-        "f": lambda x, y: 0
+        "f": lambda x, y: 2 * x + y
     }
 
     plate = Study(constants)

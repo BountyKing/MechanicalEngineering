@@ -72,6 +72,9 @@ def show_mesh(_mesh):
         p = Polygon([n1, n2, n3], ec="black")
         ax.add_patch(p)
 
+    for i, n in enumerate(nodes):
+        ax.text(n[0], n[1], str(i+1))
+
     _w, _l = max(nodes[:, 0]), max(nodes[:, 1])
     min_w, min_l = min(nodes[:, 0]), min(nodes[:, 1])
     ax.set_xlim([min_w - 1e-2, _w + 1e-2])
