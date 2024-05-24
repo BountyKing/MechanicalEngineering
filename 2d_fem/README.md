@@ -10,11 +10,11 @@ Each border corresponds to a specific boundary condition.
 1. $\Gamma_1$ is a border driven by a Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_1} = 0$,
 2. $\Gamma_1$ is a border driven by a non-homogeneous Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_1} = u_e$,
 3. $\Gamma_3$ is a border driven by a Neuman BC, i.e. $(\frac{\partial u}{\partial n})_{\Gamma_3} = 0$,
-4. $\Gamma_4$ is a border driven by a Fourier BC, i.e. $-K(\frac{\partial u}{\partial n})_{\Gamma_4} = \Beta u_{\Gamma_4} + \phi_0$
+4. $\Gamma_4$ is a border driven by a Fourier BC, i.e. $-K(\frac{\partial u}{\partial n})\_{\Gamma_4} = \beta u\_{\Gamma_4} + \phi_0$
 
 Hence, the main equation is given by:
 $$-\frac{\partial}{\partial x}K(\frac{\partial u}{\partial x}) -\frac{\partial}{\partial y}K(\frac{\partial u}{\partial y}) + \alpha u(x,y) = f(x,y)$$ on $\Omega$,
 with the following BC:
-$u_{\Gamma_1} = 0$, $u_{\Gamma_1} = u_e$, $(\frac{\partial u}{\partial n})_{\Gamma_3} = 0$, $-K(\frac{\partial u}{\partial n})_{\Gamma_4} = \Beta u_{\Gamma_4} + \phi_0$
+$u_{\Gamma_1} = 0$, $u_{\Gamma_1} = u_e$, $(\frac{\partial u}{\partial n})\_{\Gamma_3} = 0$, $-K(\frac{\partial u}{\partial n})\_{\Gamma_4} = \beta u\_{\Gamma_4} + \phi_0$
 
 For the in depth method used in this project, please refer to the course cited previously. 
