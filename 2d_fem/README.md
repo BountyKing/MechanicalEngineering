@@ -6,7 +6,8 @@ This project is based on a course given by a professor at the University of Lyon
 It is important to note that there is an error when applying the boundary conditions, hence the comment in the code.
 
 ![image](./assets/diagram.png)
-This scheme shows the domain of the generic problem studied in this project (image from the cited course).
+
+This diagram shows the domain of the generic problem studied in this project (image from the cited course).
 Each border corresponds to a specific boundary condition.
 1. $\Gamma_1$ is a border driven by a Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_1} = 0$,
 2. $\Gamma_2$ is a border driven by a non-homogeneous Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_2} = u_e$,
