@@ -84,3 +84,10 @@ def B(n1, n2, n3):
     c3 = (x2 - x1) / (2 * A)
     return (1 / (2 * A)) * np.array([[b1, b2, b3],
                                      [c1, c2, c3]])
+
+
+def phi2u(phi, nodes):
+    u = np.empty(phi.shape)
+    for i in range(phi.shape[0]):
+        pass
+    return u

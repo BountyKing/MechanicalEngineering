@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.tri
 from mesh import make_mesh, read_mesh, show_mesh
 import utilities as util
+import os
 
 
 class Study:
@@ -24,8 +25,8 @@ class Study:
         self.domain = None
         self.results = None
 
-    def make_mesh(self, _geometry, p):
-        self.mesh = make_mesh(_geometry["length"], _geometry["height"], p)
+    def make_mesh(self, corners, borders, p):
+        self.mesh = make_mesh(corners, borders, p)
         self.nn = self.mesh["nn"]
         self.ne = self.mesh["ne"]
         self.nodes = self.mesh["nodes"]
@@ -134,28 +135,51 @@ class Study:
         self.results = U
 
     def show_results(self):
-        [print(a, end=" ") for a in self.results]
+        # print(self.results)
         fig, ax = plt.subplots()
+        fig.set_size_inches(18.5, 10.5)
         triangles = matplotlib.tri.Triangulation(self.nodes[:, 0], self.nodes[:, 1], self.elements)
-        contour = ax.tricontourf(triangles, self.results, linewidths=1)
+        contour = ax.tricontourf(triangles, self.results, cmap="hot_r")
         ax.tricontour(triangles, self.results, colors='k', linewidths=1)
         fig.colorbar(contour)
+        ax.set_aspect("equal", "box")
+        ax.set_title(f"Results")
+        plt.tight_layout()
         plt.show()
+
+    def save_results(self, filename=None):
+        if not filename:
+            file_saving_index = str(len(os.listdir("./output/"))//2).rjust(4, "0")
+            filename = f"output-{file_saving_index}"
+
+        with open("output/" + filename + ".csv", "w") as f:
+            f.write("//nodes matrix\n")
+            for i in range(self.nodes.shape[0]):
+                f.write(f"{self.nodes[i, 0]},{self.nodes[i, 1]}\n")
+            f.write("//result matrix\n")
+            for i in range(self.results.shape[0]):
+                f.write(f"{self.results[i]}\n")
+
+        fig, ax = plt.subplots()
+        triangles = matplotlib.tri.Triangulation(self.nodes[:, 0], self.nodes[:, 1], self.elements)
+        contour = ax.tricontourf(triangles, self.results)
+        ax.tricontour(triangles, self.results, colors='k', linewidths=1)
+        fig.colorbar(contour)
+        plt.savefig(f"output/" + filename + ".pdf")
 
 
 if __name__ == "__main__":
-    
     constants = {
         "ue": 2.0,
         "alpha": 0.0,
         "beta": 0.0,
         "phi0": 0.0,
         "k": 1.0,
-        "f": lambda x, y: 2 * x + y
+        "f": lambda x, y: 0.0
     }
 
     plate = Study(constants)
-    plate.read_mesh("maillage.msh")
+    plate.read_mesh("mesh/maillage.msh")
     plate.show_mesh()
     plate.do()
     plate.show_results()
