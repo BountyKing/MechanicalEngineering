@@ -9,9 +9,9 @@ It is important to note that there is an error when applying the boundary condit
 This scheme shows the domain of the generic problem studied in this project (image from the cited course).
 Each border corresponds to a specific boundary condition.
 1. $\Gamma_1$ is a border driven by a Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_1} = 0$,
-2. $\Gamma_2$ is a border driven by a non-homogeneous Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_2} = u_e$,
-3. $\Gamma_3$ is a border driven by a Neuman BC, i.e. $(\frac{\partial u}{\partial n})_{\Gamma_3} = 0$,
-4. $\Gamma_4$ is a border driven by a Fourier BC, i.e. $-K(\frac{\partial u}{\partial n})\_{\Gamma_4} = \beta u\_{\Gamma_4} + \phi_0$
+3. $\Gamma_2$ is a border driven by a non-homogeneous Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_2} = u_e$,
+4. $\Gamma_3$ is a border driven by a Neuman BC, i.e. $(\frac{\partial u}{\partial n})_{\Gamma_3} = 0$,
+5. $\Gamma_4$ is a border driven by a Fourier BC, i.e. $-K(\frac{\partial u}{\partial n})\_{\Gamma_4} = \beta u\_{\Gamma_4} + \phi_0$
 
 Hence, the main equation is given by:
 $$-\frac{\partial}{\partial x}K(\frac{\partial u}{\partial x}) -\frac{\partial}{\partial y}K(\frac{\partial u}{\partial y}) + \alpha u(x,y) = f(x,y)$$ on a domain $\Omega$,
@@ -25,10 +25,11 @@ For the in depth method used in this project, please refer to the course cited p
 ## How to use this repository
 Type `python3 cases.py n` to execute the $n^{th}$ case.
 ### Case 1
+
 Resolve a thermal problem (a thin plate heated on its left side), i.e. 
 $$\Delta T = 0$$
+<img src="https://github.com/BountyKing/MechanicalEngineering/blob/master/2d_fem/assets/thermal_plate.png" />
 
-![image](./assets/thermalplate.png)
 The left side (HEAT) is considered as $\Gamma_2$, and the rest (CONVECTION) as $\Gamma_4$, with these constants values:
 1. $K = 1$,
 1. $T_e = u_e = 200$,
@@ -44,7 +45,8 @@ Same as the first case but with a finer meshing.
 Resolve a potential flow problem with an obstacle.
 $$\Delta \phi = 0$$
 
-![image](./assets/potentialflow.png)
+<img src="https://github.com/BountyKing/MechanicalEngineering/blob/master/2d_fem/assets/potential_flow.png" />
+
 We use the symmetrical properties of the problem to reduce it to a quarter domain (in red). Then, we associate the the inlet segment (IN) to $\Gamma_2$, the walls (WALL) to $\Gamma_3$ and finally the middle symmetry to $\Gamma_1$.
 In this case, we use these constants:
 1. $K = 1$,
