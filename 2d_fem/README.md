@@ -5,13 +5,13 @@ This project is based on a course given by a professor at the University of Lyon
 
 It is important to note that there is an error when applying the boundary conditions, hence the comment in the code.
 
-![image](./assets/scheme.png)
+![image](./assets/diagram.png)
 This scheme shows the domain of the generic problem studied in this project (image from the cited course).
 Each border corresponds to a specific boundary condition.
 1. $\Gamma_1$ is a border driven by a Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_1} = 0$,
-3. $\Gamma_2$ is a border driven by a non-homogeneous Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_2} = u_e$,
-4. $\Gamma_3$ is a border driven by a Neuman BC, i.e. $(\frac{\partial u}{\partial n})_{\Gamma_3} = 0$,
-5. $\Gamma_4$ is a border driven by a Fourier BC, i.e. $-K(\frac{\partial u}{\partial n})\_{\Gamma_4} = \beta u\_{\Gamma_4} + \phi_0$
+2. $\Gamma_2$ is a border driven by a non-homogeneous Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_2} = u_e$,
+3. $\Gamma_3$ is a border driven by a Neuman BC, i.e. $(\frac{\partial u}{\partial n})_{\Gamma_3} = 0$,
+4. $\Gamma_4$ is a border driven by a Fourier BC, i.e. $-K(\frac{\partial u}{\partial n})\_{\Gamma_4} = \beta u\_{\Gamma_4} + \phi_0$
 
 Hence, the main equation is given by:
 $$-\frac{\partial}{\partial x}K(\frac{\partial u}{\partial x}) -\frac{\partial}{\partial y}K(\frac{\partial u}{\partial y}) + \alpha u(x,y) = f(x,y)$$ on a domain $\Omega$,
@@ -32,11 +32,11 @@ $$\Delta T = 0$$
 
 The left side (HEAT) is considered as $\Gamma_2$, and the rest (CONVECTION) as $\Gamma_4$, with these constants values:
 1. $K = 1$,
-1. $T_e = u_e = 200$,
-2. $\alpha = 0$
-3. $f(x,y) = 0$
-4. $\beta = 0$
-5. $\phi_0 = 5$.
+2. $T_e = u_e = 200$,
+3. $\alpha = 0$
+4. $f(x,y) = 0$
+5. $\beta = 0$
+6. $\phi_0 = 5$.
 
 ### Case 2
 Same as the first case but with a finer meshing.
@@ -56,7 +56,8 @@ In this case, we use these constants:
 5. $\beta = 0$
 6. $\phi_0 = 5$.
 
-Please not that at the end, we get the values of $\phi$ and not of $\psi$. For this, we need to convert it thanks to there definition.
+Please note that at the end, we get the values of $\phi$ and not of $\psi$. To get $\psi$, we need to calculate 
+it thanks definitions.
 $u = \frac{\partial \psi}{\partial y}$,
 $v = -\frac{\partial \psi}{\partial x}$,
 $u = \frac{\partial \phi}{\partial x}$,
