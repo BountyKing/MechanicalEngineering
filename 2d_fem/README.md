@@ -5,7 +5,7 @@ This project is based on a course given by a professor at the University of Lyon
 
 It is important to note that there is an error when applying the boundary conditions, hence the comment in the code.
 
-![image](assets/scheme.png)
+![image](./assets/scheme.png)
 This scheme shows the domain of the generic problem studied in this project (image from the cited course).
 Each border corresponds to a specific boundary condition.
 1. $\Gamma_1$ is a border driven by a Dirichlet BC (Boundary Condition), i.e. $u_{\Gamma_1} = 0$,
@@ -27,7 +27,7 @@ Type `python3 cases.py n` to execute the $n^{th}$ case.
 ### Case 1
 Resole a thermal problem (a thin plate heated on its left side), i.e. 
 $$\Delta T = 0$$
-![image](assets/thermal_plate.png)
+![image](./assets/thermal_plate.png)
 The left side (HEAT) is considered as $\Gamma_2$, and the rest (CONVECTION) as $\Gamma_4$, with these constants values:
 1. $K = 1$,
 1. $T_e = u_e = 200$,
@@ -43,7 +43,7 @@ Same as the first case but with a finer meshing.
 Resolve a potential flow problem with an obstacle.
 $$\Delta \phi = 0$$
 
-![image](assets/potential_flow.png)
+![image](./assets/potential_flow.png)
 We use the symmetrical properties of the problem to reduce it to a quarter domain (in red). Then, we associate the the inlet segment (IN) to $\Gamma_2$, the walls (WALL) to $\Gamma_3$ and finally the middle symmetry to $\Gamma_1$.
 In this case, we use these constants:
 1. $K = 1$,
